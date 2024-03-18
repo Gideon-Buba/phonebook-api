@@ -23,10 +23,11 @@ app.get("/", (req, res) => {
     res.send("Hello world")
 })
 
+
 // get all contacts
-app.post("/api/contacts", async(req, res) => {
+app.get("/api/contacts", async(req, res) => {
     try {
-        const contacts = await contacts.find();
+        const contacts = await Contact.find();
         res.json(contacts)
     } catch (err) {
         res.status(500).json({ message: err.message });
