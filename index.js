@@ -34,9 +34,25 @@ app.post("/api/contacts", async(req, res) => {
 })
 
 // get a single contact
-app.get("/api/contacts/:id", async(req, res) => {
+app.get("/api/contacts/:id", getContact, async(req, res) => {
     res.json(res.contacts)
 })
+
+// Middleware to fetch a single contact by ID
+async function getContact(req, res, next) {
+    let contact;
+    try {
+        contact = await Contact.findById(req.params.id);
+        if (contact == null) {
+            return res.status(404).json({ message: "Contact not found" });
+        }
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+    res.contact = contact;
+    next();
+}
+
 
 // create a contact 
 app.post("/api/contacts/", async(req, res) => {
@@ -52,11 +68,29 @@ app.post("/api/contacts/", async(req, res) => {
 })
 
 
+// Update a contact by ID
+app.put("/api/contacts/:id", getContact, async (req, res) => {
+    try {
+        const { name, phone } = req.body;
+        res.contact.name = name;
+        res.contact.phone = phone;
+        const updatedContact = await res.contact.save();
+        res.json(updatedContact);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
 
 
-
-
-
+// Delete a contact by ID
+app.delete("/api/contacts/:id", getContact, async (req, res) => {
+    try {
+        await res.contact.remove();
+        res.json({ message: "Contact deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 connectToDb()
     .then(() => {
