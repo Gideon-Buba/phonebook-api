@@ -1,3 +1,7 @@
+/*
+
+*/
+
 const express = require("express");
 const mongoose = require("mongoose");
 const Contact = require("./models/contact")
@@ -7,6 +11,10 @@ const port = process.env.PORT || 8000
 const uri = process.env.DB_URI
 const app = express()
  
+/**
+ * Creates a MongoDB Connection
+ * @returns void
+ */
 async function connectToDb () {
     try {
         await mongoose.connect(uri);
@@ -57,12 +65,9 @@ async function getContact(req, res, next) {
 
 // create a contact 
 app.post("/api/contacts/", async(req, res) => {
-    const { name, phone } = req.body;
     try {
-        const contact = new Contact({ ...req.body });
-        const newContact = await contact.save()
-
-        res.status(201).json(newContact)
+        const contact = Contact.create(req.body);
+        res.status(201).json(contact)
     } catch (error) {
         res.status(400).json({ message: err.message });
     }
