@@ -11,7 +11,7 @@ To get started with this API, follow the steps below:
 3. Install dependencies by running `npm install`.
 4. Set up a MongoDB database and obtain the connection URI.
 5. Create a `.env` file in the root directory and add your MongoDB URI as `DB_URI`.
-6. Start the server by running `npm start`.
+6. Start the server by running `npm run dev`.
 7. The server will start running on http://localhost:8000 by default.
 
 ## API Endpoints
