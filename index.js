@@ -74,13 +74,11 @@ app.post("/api/contacts/", async(req, res) => {
 })
 
 
-// Update a contact by ID
+// Update a contact by ID// Update a contact by ID
 app.put("/api/contacts/:id", getContact, async (req, res) => {
     try {
         const { name, phone } = req.body;
-        res.contact.name = name;
-        res.contact.phone = phone;
-        const updatedContact = await res.contact.save();
+        const updatedContact = await Contact.findByIdAndUpdate(req.params.id, { name, phone }, { new: true });
         res.json(updatedContact);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -88,15 +86,17 @@ app.put("/api/contacts/:id", getContact, async (req, res) => {
 });
 
 
+
 // Delete a contact by ID
 app.delete("/api/contacts/:id", getContact, async (req, res) => {
     try {
-        await res.contact.remove();
+        await Contact.deleteOne({ _id: req.params.id });
         res.json({ message: "Contact deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 connectToDb()
     .then(() => {
